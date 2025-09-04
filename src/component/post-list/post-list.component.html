@@ -1,0 +1,78 @@
+@if(posts$){
+  <div class="container">
+   <header>
+    <p> <a routerLink="../../post-update/{{postType}}/-1">Add New {{postType}} </a> </p> 
+   </header>
+ 
+   <div class="btn-group" role="group" aria-label="Basic outlined example">
+     <button (click)="filterPostsByContentStatus('ALL')" type="button" class="btn btn-outline-primary">All</button>
+     <button (click)="filterPostsByContentStatus('PUBLISHED')" type="button" class="btn btn-outline-primary">Published</button>
+     <button (click)="filterPostsByContentStatus('DRAFT')" type="button" class="btn btn-outline-primary">Draft</button>
+   </div>
+ 
+   <div  class="table-responsive small section-body">
+     <table class="table table-striped table-sm">
+       <thead>
+         <tr>
+          @if(postType=="post"){
+            <th scope="col">
+              <select #selected (change)="filterPostsByCategory(selected.value)"  id=""  class="form-select" aria-label="" >
+                <option value="all">All Categories</option>
+                  <option  *ngFor="let c of categories$" [ngValue]="c.name">{{c.name}}</option>
+              </select>
+            </th>
+          }
+           
+           <th scope="col">Title</th>
+           <th scope="col">Author</th>
+           <th scope="col">Last Update</th>
+           <th scope="col"></th>
+           <th scope="col" >Delete</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr *ngFor="let p of getDisplayPosts()">
+           <td><input #postToDeleteInput type = "checkbox" (change)="postToDelete(p.id, postToDeleteInput)"></td>
+           <td><a target="_blank" routerLink= "/{{username}}/{{p.title}}/{{p.id}}" >{{p.title}} </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../post-update/{{postType}}/{{p.id}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td><a  class="btn-danger" (click)="deletePost(p.id)" style="cursor: pointer;"><i class="bi bi-trash" style="color: #FF0000;" ></i>  Delete</a></td>
+         </tr>
+      
+       </tbody>
+     </table>
+     <button *ngIf="postIdsToDelete.length>0" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promptModal">Trash</button>
+   </div>
+ 
+ </div>
+ <!--promptmodal-->
+ <div class="modal fade" id="promptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="">Confirm</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+         body
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="deletePosts()">Yes</button>
+       </div>
+     </div>
+   </div>
+ </div>
+ <!--#promptmodal-->
+}
+
+
+<!--Status message-->
+<div  *ngIf="statusMessage!=''">
+      <app-error-message [(errorMessage)]="statusMessage" [(alertType)]="alertType"></app-error-message>
+</div>
+     <!--Status message-->
+
+
+
+

@@ -1,0 +1,87 @@
+
+<div class="default">
+@if(menu){
+<app-header [username]="username" [menu]="menu" [option]="option"></app-header>
+}
+
+
+@if(post$){
+  <div #viewContainer class="container" >
+  <main class="container">
+<div class="row g-5">
+  <div [ngClass]="[mainContentClass]">
+     <!--Post title and feature image-->
+     @if(post$.featuredImageUrl){
+<div id="featuredImage" *ngIf="post$.featuredImageUrl">
+      <p><img alt="Post Image" [src]="post$.featuredImageUrl" class="img-thumbnail"/></p>
+    </div>
+    <div class="px-0">
+    <h1 class="display-4 fst-italic">{{post$.title}}</h1>
+  </div>
+     }@else {
+<div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+  <div class="px-0">
+    <h1 class="display-4 fst-italic">{{post$.title}}</h1>
+  </div>
+</div>
+     }
+<!--#Post title and feature image-->
+   
+   
+  
+<!--mainContent  -->
+<article  class="blog-post" [innerHTML]="getSafeMainContent()"></article>
+
+
+
+  <!-- <article class="blog-post" #mainContent></article> -->
+
+ @if(post$.postType=='post'){
+<button class="btn-sm" *ngFor="let c of post$.categories">{{c.name}}</button>
+    <nav  class="blog-pagination" aria-label="Pagination">
+      <a class="btn btn-outline-primary rounded-pill" href="#">Older</a>
+      <a class="btn btn-outline-secondary rounded-pill disabled" aria-disabled="true">Newer</a>
+    </nav>
+ }
+    
+
+  </div>
+<!--Right sidebar-->
+  <div *ngIf="post$.sidebarType!='NONE'" [ngClass]="[sidebarClass]" class="col-md-3">
+    <div class="position-sticky" style="top: 2rem;">
+
+<!--recent posts-->
+      <div>
+        <app-recent-posts [(postId)]="post$.id"></app-recent-posts>
+      </div><!--recent posts-->
+
+<!--category menu-->
+      <div class="p-4">
+        
+      </div><!--#category menu-->
+
+      <div class="p-4">
+        <h4 class="fst-italic">Elsewhere</h4>
+        <ol class="list-unstyled">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Facebook</a></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <!--#Right sidebar-->
+</div>
+
+</main>
+</div>
+}
+
+
+@if (menu) {
+<app-footer [username]="username" [option]="option"></app-footer>
+}
+
+
+</div>
+  

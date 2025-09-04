@@ -1,0 +1,80 @@
+<div class="container">
+  <!-- <div #contextMenu id="cm" class="small"></div> -->
+  <div #contextMenu id="cm" class="small" style="position: absolute;z-index: 10;"></div>
+    <!--temp-->
+    
+  <!--#temp-->
+
+    <div class="row" >
+      <div *ngIf="formMessage" class="alert alert-warning alert-dismissible col-10"> 
+        {{formMessage}}
+      </div>
+      <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input [formControl]="formTitle"  class="form-control" id="title" placeholder="Add Title">
+</div>
+<div class="row sticky-top" style="z-index: 9;">
+  <div class="col-10">
+  <ul style="cursor: pointer;" class="nav">
+  <li class="nav-item">
+    <a (click)="formatText('B')" class="nav-link" >B</a>
+  </li>
+  <li class="nav-item">
+    <a (click)="formatText('I')" class="nav-link" >I</a>
+  </li>
+  <li class="nav-item">
+    <a (click)="formatText('U')" class="nav-link" >U</a>
+  </li>
+   <li class="nav-item">
+    <a (click)="formatText('L')" class="nav-link" >L</a>
+  </li>
+  
+</ul>
+  </div>
+  <div class="col-2">
+      <button (click)="addRow(false)" type="button" class="d-block">Row<i class="bi bi-file-plus"></i></button>
+  </div>
+
+  </div>
+          
+        <div id="page-builder" style="position: relative;" #pb class="container-fluid">
+        
+         </div>
+    
+    <div>
+      <button (click)="save(false)" class="btn w-25 py-2 float-start" type="button" >Save Draft</button>
+          <button (click)="save(true)" class="btn w-25 py-2 float-end" type="button">Publish</button>
+    </div>
+    
+
+          <!--display-->
+          <div #display>
+
+          </div>
+          <!--#display-->
+          
+          <!-- LinkModal -->
+<button #modalButton type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#linkModal">
+  Link
+</button>
+<div class="modal fade" id="linkModal" tabindex="-1" aria-labelledby="linkModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="linkModalLabel">Enter Link</h1>
+        <button #closeModalButton type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-10">
+        <input #linkInputField />
+      </div>
+      <div class="col-2">
+        <button #saveLinkButton type="button" class="btn btn-primary">Save</button>
+      </div>
+      </div>
+    </div>
+  </div>
+</div><!-- #LinkModal -->
+</div>
+
+

@@ -1,0 +1,17 @@
+<footer class="py-5 text-center text-body-secondary bg-body-tertiary">
+  <p>
+    @if(option.siteName){
+ <a style="text-decoration: none;" routerLink="/{{username}}">{{option.siteName}}</a>
+    }@else {
+    <a style="text-decoration: none;" routerLink="/{{username}}/home/{{option.homePageId}}" >Home</a>
+    }
+  <a style="text-decoration: none;" routerLink="/{{username}}/privacy-Policy/{{option.privacyPolicyPageId}}" >| Privacy Policy</a>
+ <a style="text-decoration: none;" routerLink="/{{username}}/terms-of-service/{{option.tosPageId}}" >| Terms of Use</a>
+ <a style="text-decoration: none;" routerLink="/{{username}}/about-us/{{option.aboutPageId}}" >| About Us</a> 
+<a style="text-decoration: none;" routerLink="/{{username}}/contact/{{option.contactPageId}}" >| Contact Us</a> 
+  </p>
+
+<p class="mb-0">
+  <a href="#">Back to top</a>
+</p>
+</footer>

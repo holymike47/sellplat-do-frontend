@@ -1,0 +1,250 @@
+<div class="container">
+  <div class="row">
+
+<!--Main-->
+<main id = "main" class="col-md-10 ms-sm-auto col-lg-10">
+    @if(option$){
+      <div class="container">
+        <!--Tab panel-->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="basic-settings-tab" data-bs-toggle="tab" data-bs-target="#basic-settings" type="button" role="tab" aria-controls="basic-settings" aria-selected="true">Basic</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pages-settings-tab" data-bs-toggle="tab" data-bs-target="#pages-settings" type="button" role="tab" aria-controls="pages-settings" aria-selected="false">Special Pages</button>
+        </li>
+      </ul>
+      
+      <div class="tab-content" id="myTabContent">
+        <!--Basic Settings-->
+        <div class="tab-pane fade show active" id="basic-settings" role="tabpanel" aria-labelledby="basic-settings-tab">
+          <div  class="small section-body">
+            <form name="optionForm" (ngSubmit)="saveOption()">
+
+              <div class="mb-3 row">
+                  <label for="siteName" class="col-sm-2 col-form-label">Site title</label>
+                  <div class="col-sm-10">
+                    <input name="siteName" value="{{option$.siteName}}" class="form-control" id="siteName" required>
+                  </div>
+                </div>
+          
+                <div class="mb-3 row">
+                  <label for="tagline" class="col-sm-2 col-form-label">Tagline</label>
+                  <div class="col-sm-10">
+                    <input name="tagline" value="{{option$.tagline}}" class="form-control" id="tagline">
+                  </div>
+                </div>
+      
+          
+                <div class="mb-3 row">
+                  <label for="siteLanguage" class="col-sm-2 col-form-label">Site Language</label>
+                  <div class="col-sm-10">
+                      <select name="siteLanguage"   id="siteLanguage"  class="form-select" aria-label="" >
+                          <option [selected]="sl==option$.siteLanguage" *ngFor="let sl of config.SITE_LANGUAGE" value="{{sl}}">{{sl}}</option>
+                        </select>
+                  </div>
+                </div>
+          
+                <!--Date Format-->
+                <div class="mb-3 row">
+                  <label for="dateFormat" class="col-sm-2 col-form-label">Date Format</label>
+                  <div class="col-sm-10" id="dateFormat">
+                  <div *ngFor="let df of config.DATE_FORMAT" class="form-check">
+                      <input name="dateFormat" [checked]="df==option$.dateFormat"  class="form-check-input dateFormat" type="radio" id="dateFormat-{{df}}" value="{{df}}">
+                      <label class="form-check-label" for="dateFormat-{{df}}">{{df}}</label>
+                    </div>
+      
+                  </div>
+                </div><!--#Date Format-->
+          
+                <!--Time Format-->
+                <div class="mb-3 row">
+                  <label for="timeFormat" class="col-sm-2 col-form-label">Time Format</label>
+                  <div class="col-sm-10" id="timeFormat">
+  
+                  <div *ngFor="let tf of config.TIME_FORMAT" class="form-check">
+                      <input name="timeFormat" [checked]="tf==option$.timeFormat" class="form-check-input timeFormat" type="radio"  id="timeFormat-{{tf}}" value="{{tf}}">
+                      <label class="form-check-label" for="timeFormat-{{tf}}">{{tf}}</label>
+                    </div>
+          
+                    </div>
+                </div><!--#Time Format-->
+          
+                
+          <!--Time zone-->
+                <div class="mb-3 row">
+                  <label for="timeZone" class="col-sm-2 col-form-label">Time Zone</label>
+                  <div class="col-sm-10">
+                      <select name="timeZone" id="timeZone"  class="form-select" aria-label="" >
+                        <option [selected]="tz==option$.timeZone" *ngFor="let tz of config.TIME_ZONE" value="{{tz}}">{{tz}}</option>
+                        </select>
+                  </div>
+                </div><!--#Time zone-->
+  
+                <!--Currency-->
+          
+                <div class="mb-3 row">
+                  <label for="currency" class="col-sm-2 col-form-label">Currency</label>
+                  <div class="col-sm-10">
+                      <select name="currency" id="currency"  class="form-select" aria-label="" >
+                          <option [selected]="c==option$.currency" *ngFor="let c of config.CURRENCY" value="{{c}}">{{c}}</option>
+                        </select>
+                  </div>
+                </div><!--#Currency-->
+          
+          
+                <!--Theme-->
+                <div class="mb-3 row">
+                  <label for="activeTheme" class="col-sm-2 col-form-label">Theme</label>
+                  <div class="col-sm-10" id="activeTheme">
+                  <div *ngFor="let at of config.ACTIVE_THEME" class="form-check">
+                      <input name="activeTheme" [checked]="at==option$.activeTheme" class="form-check-input activeTheme" type="radio" id="activeTheme-{{at}}" value="{{at}}">
+                      <label class="form-check-label" for="activeTheme-{{at}}">{{at}}</label>
+                    </div>
+                    
+                    </div>
+                </div><!--#Theme-->
+  
+                <!--Icon-->
+          
+                <div class="mb-3 row">
+                  <label for="icon" class="col-sm-2 col-form-label">Site Icon </label>
+                  <div class="col-sm-10">
+                    <app-image-handler [imageUrl]="option$.iconUrl" (outPutMessage)="saveImageUrl($event,'icon')">
+                      @if(option$.iconUrl){
+                        Change
+                      }@else {
+                        Add
+                      }
+                       </app-image-handler>
+                  </div>
+                </div>  <!--#Icon-->
+  
+           <!--Logo-->
+                <div class="mb-3 row">
+                  <label for="logo" class="col-sm-2 col-form-label">Site Logo </label>
+                  <div class="col-sm-10">
+                    <app-image-handler [imageUrl]="option$.logoUrl" (outPutMessage)="saveImageUrl($event,'logo')">
+                      @if(option$.logoUrl){
+                        Change
+                      }@else {
+                        Add
+                      }
+                       </app-image-handler>
+                  </div>
+                </div><!--#Logo-->
+  
+                <button type="button" (click)="saveOption()" class="btn float-end">Save</button>
+          
+              </form>
+     
+        </div>
+    </div><!--#Basic settings-->
+    
+    <!--pages settings-->
+        <div class="tab-pane fade" id="pages-settings" role="tabpanel" aria-labelledby="pages-settings-tab">
+          <div  class="small section-body">
+            <div  class="table-responsive small section-body">
+     <table class="table table-striped table-sm">
+       <tbody>
+          <!--Home-->
+<tr *ngIf="option$.homePageId" >
+   <td><input type = "checkbox" disabled></td>
+           <td ><a target='_blank' routerLink= "/{{username}}" >HOME PAGE </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../{{username}}/post-update/page/{{option$.homePageId}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td></td>
+</tr>
+ <!--#Home-->
+         <!--Blog-->
+<tr *ngIf="option$.blogPageId" >
+   <td><input type = "checkbox" disabled></td>
+           <td ><a target='_blank' routerLink= "/{{username}}/archive/post/{{option$.blogPageId}}" >BLOG PAGE </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../{{username}}/post-update/page/{{option$.blogPageId}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td></td>
+</tr>
+ <!--#Blog-->
+         <!--contact-->
+<tr *ngIf="option$.contactPageId">
+   <td><input type = "checkbox" disabled></td>
+           <td><a target='_blank' routerLink= "/{{username}}/contact/{{option$.contactPageId}}" >CONTACT PAGE </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../{{username}}/post-update/page/{{option$.contactPageId}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td></td>
+</tr>
+ <!--#Contact-->
+  <!--About-->
+<tr *ngIf="option$.aboutPageId">
+   <td><input type = "checkbox" disabled></td>
+           <td><a target="_blank" routerLink= "/{{username}}/about-us/{{option$.aboutPageId}}" >ABOUT US PAGE </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../{{username}}/post-update/page/{{option$.aboutPageId}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td></td>
+</tr>
+ <!--#About-->
+  <!--privacy policy-->
+<tr *ngIf="option$.privacyPolicyPageId">
+   <td><input type = "checkbox" disabled></td>
+           <td><a target="_blank" routerLink= "/{{username}}/privacy-Policy/{{option$.privacyPolicyPageId}}" >PRIVACY POLICY </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../{{username}}/post-update/page/{{option$.privacyPolicyPageId}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td></td>
+</tr>
+ <!--#privacy policy-->
+ <!--tos-->
+<tr *ngIf="option$.tosPageId">
+   <td><input type = "checkbox" disabled></td>
+           <td><a target="_blank" routerLink= "/{{username}}/terms-of-service/{{option$.tosPageId}}" >TERMS OF SERVICE </a> </td>
+           <td></td>
+           <td></td>
+           <td><a  routerLink="../../{{username}}/post-update/page/{{option$.tosPageId}}" class=""><i class="bi bi-pencil-square"></i>  Edit</a></td>
+           <td></td>
+</tr>
+ <!--#tos-->
+      
+       </tbody>
+     </table>
+   </div>
+          </div>
+        </div><!--#pages settings-->
+      </div>
+      <!--#Tab panel-->
+          
+        
+       
+      </div>
+
+
+
+
+        
+    }
+
+   
+
+</main><!--#Main-->
+
+<!--Right sidebar-->
+<div id="right-sidebar" class="sidebar border border-left col-md-2 col-lg-2 p-0 bg-body-tertiary">
+
+</div><!--Right sidebar-->
+
+
+  </div>
+</div>
+<!--Status message-->
+     <div *ngIf="statusMessage" class="fixed-bottom">
+      <app-error-message [(errorMessage)]="statusMessage" [(alertType)]="alertType"></app-error-message>
+     </div>
+     <!--Status message-->
+
+
+
+
+

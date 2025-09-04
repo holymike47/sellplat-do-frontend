@@ -1,0 +1,117 @@
+@if(type=="list"){
+<div class="container">
+      <header>
+        <p> <a routerLink="../../../category/new/-1">Add New Category </a> </p> 
+       </header>
+
+       @if(categories$){
+        <div  class="table-responsive small section-body">
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cat of categories$">
+                <td><input type = "checkbox" [formControl] ="categoryToDeleteInput" value="{{cat.id}}" (change)="categoryToDelete(cat.id, categoryToDeleteInput.value)"></td>
+                <td><a routerLink="../../../category/detail/{{cat.id}}">{{cat.name}} </a> </td>
+                <td>{{cat.description}}</td>
+                <td><a  routerLink="../../../category/edit/{{cat.id}}" class=""><i class="bi bi-gear-wide-connected"></i>  Edit</a></td>
+                <td><a   (click)="deleteCategories(cat.id)"><i class="bi bi-x-circle-fill" style="color: #FF0000;cursor: pointer;" ></i>  </a></td>
+              </tr>
+           
+            </tbody>
+          </table>
+          <button *ngIf="categoryIdsToDelete.length>0" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promptModal">Trash</button>
+        </div>
+       }
+       
+<!--promptmodal-->
+  
+  <div class="modal fade" id="promptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Confirm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          body
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="deleteCategories()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#promptmodal-->
+  </div>
+}@else if (type=="edit" || type=="new") {
+<div class="container">
+       @if(category$){
+        <!--form-->
+        <form name="categoryForm">
+          <div *ngIf="formMessage" class="alert alert-danger">
+            {{formMessage}}
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input name="name" value="{{category$.name}}" class="form-control" id="name">
+          </div>
+          
+          <div class="mb-3">
+            <label for="parent" class="form-label">Parent Category</label>
+          <select  id="parent"  class="form-select" aria-label="" >
+            <option *ngIf="category$.parentId==-1" selected>None</option>
+              <option id="selectedCategory" [selected]="cat.id==category$.parentId"  *ngFor="let cat of categories$" [value]="cat.id+'|*|'+cat.name">{{cat.name}}</option>
+                  </select>
+          </div>
+    <!---->
+    
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" value="{{category$.description}}" class="form-control" id="description" rows="3">{{category$.description}}</textarea>
+          </div>
+
+          <!--image-->
+                <div class="mb-3">
+                  <label for="" class="form-label">Image </label>
+                  <div class="">
+                    <app-image-handler [imageUrl]="category$.categoryImageUrl" (outPutMessage)="saveImageUrl($event)">
+                      @if(category$.categoryImageUrl){
+                        Change
+                      }@else {
+                        Add
+                      }
+                       </app-image-handler>
+                  </div>
+                </div>  <!--#image-->
+          <div>
+          <button class="btn" type="button" (click)="saveCategory()">Save</button>
+        </div>
+          </form><!--#form-->
+
+       }
+  </div>
+}
+@else {
+<!--category details -->
+}
+
+
+
+  
+
+
+
+<!--Status message-->
+     <div *ngIf="statusMessage" class="fixed-bottom">
+      <app-error-message [(errorMessage)]="statusMessage" [(alertType)]="alertType"></app-error-message>
+     </div>
+     <!--Status message-->
+  

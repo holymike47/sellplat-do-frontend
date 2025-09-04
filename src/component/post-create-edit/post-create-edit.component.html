@@ -1,0 +1,231 @@
+@if(post$){
+
+  <div class="row">
+    <!--main form-->
+    <div class="col-md-10"> 
+      <!--main form-->
+      <app-page-builder [initTitle]="post$.title" [initPublish]="post$.contentStatus" [initMessage]="post$.mainContent" (pageMessage)="savePageBuilderMessage($event)"></app-page-builder>
+     
+    </div> 
+
+<!--right sidebar-->
+  <div class="col-md-2">
+    <!--Tab panel-->
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="basic-settings-tab" data-bs-toggle="tab" data-bs-target="#basic-settings" type="button" role="tab" aria-controls="basic-settings" aria-selected="true">Basic</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="basic-settings-tab" data-bs-toggle="tab" data-bs-target="#advance-settings" type="button" role="tab" aria-controls="advance-settings" aria-selected="false">Advance</button>
+    </li>
+  </ul>
+  
+  <div class="tab-content" id="myTabContent">
+    <!--Basic Settings-->
+    <div class="tab-pane fade show active" id="basic-settings" role="tabpanel" aria-labelledby="basic-settings-tab">
+      <div  class="small section-body">
+        <!--Featured Image-->
+          <div *ngIf="postType=='post'" class="card mb-2">
+                    <app-image-handler [imageUrl]="post$.featuredImageUrl" (outPutMessage)="saveImageUrl($event)">
+                      @if(post$.featuredImageUrl){
+                        Change
+                      }@else {
+                        Add
+                      }
+                       </app-image-handler>
+                </div>
+       <!--Featured Image-->
+
+        <!--Excerpt-->
+        <div *ngIf="postType=='post'" class="card mb-2">
+          <div class="card-body">
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#dynamicModal" (click)="displayModal('Excerpt')" >Add an excerpt</button>
+          </div>
+          
+        </div><!--#Excerpt-->
+
+
+        <!--contentStatus-->
+          <div *ngIf="postType=='post' && post$?.id!=-1" class="card mb-2">
+            <div class="card-body">
+              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#dynamicModal"  (click)="displayModal('Status')">Status:</button>
+          <span>{{post$.contentStatus}}</span>
+            </div>
+          </div><!--#contentStatus-->
+
+        <!--Categories-->
+        <div *ngIf="postType=='post'" class="card mb-2">
+          <div class="card-body">
+            <p>
+              <button class="btn btn-sm dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#add-category" aria-expanded="false" aria-controls="add-category">
+                Category
+              </button>
+            </p>
+          <div class="collapse" id="add-category">
+            <form name="postForm">
+                <div class="form-check" *ngFor="let c of getDisplayCategories()">
+                <input [checked]="checkedCategory(c.id)" class="form-check-input" type="checkbox" #pcn value="{{c.id}}" (change)="selectCategory(pcn)">
+                <label class="form-check-label" for="category{{c.name}}">
+                  {{c.name|titlecase}}
+                </label>
+              </div>
+              </form>
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#dynamicModal" (click)="displayModal('Category')" >Create New Category</button>
+          </div>
+          </div>
+        </div>  <!--#Categories-->
+
+    
+    <!--Tags-->
+    <div *ngIf="postType=='post'" class="card mb-2">
+      <div class="card-body">
+        <p>
+          <button class="btn btn-sm dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#add-tag" aria-expanded="false" aria-controls="add-tag">
+            Tags
+          </button>
+        </p>
+        <div class="collapse" id="add-tag">
+    <div class="mb-3">
+      <div>
+        <button type="button" class="btn btn-md mx-2" *ngFor="let t of postTags">
+{{t}} <i (click)="removeTag(t)" class="bi bi-file-x"></i>
+</button>
+      </div>
+
+      <p>Add new tag</p>
+      <form name="postForm">
+        <textarea #tags  name="tags"  class="form-control" id="tags"></textarea>
+      </form>
+      
+      <p><small>Separate with comma</small><button (click)="addNewTag(tags)">Add</button></p>
+    </div>
+        </div>
+    
+      </div>
+    </div><!--#Tags-->
+
+    <!--selectedsidebar -->
+    <div class="card mb-2">
+      <div class="card-body">
+        <p>Sidebar layout</p>
+     <div class="d-block w-100">
+      <form name="postForm">
+      <select form="postForm"  name="sidebarType" id="sidebarType" class="form-select" aria-label="Default sidebar">
+        <option [selected]="sb==post$.sidebarType" *ngFor="let sb of config.SIDEBAR_LAYOUT" value="{{sb}}">{{sb}}</option>
+      </select>
+      </form>
+        </div>
+      </div>
+    </div> <!--#selectedsidebar -->
+    
+    </div>
+</div><!--#Basic settings-->
+
+<!--Advance settings-->
+    <div class="tab-pane fade" id="advance-settings" role="tabpanel" aria-labelledby="advance-settings-tab">
+      <div  class="small section-body">
+<!--IsFeatured-->
+<div *ngIf="postType=='post'" class="card mb-2">
+<div class="card-body">
+  <form name="postForm">
+  <div class="form-check form-switch">
+    <input form="postForm" [checked]="post$.isFeatured" name="isFeatured"  class="form-check-input" type="checkbox" id="isFeatured">
+    <label class="form-check-label" for="isFeatured">Featured Post?</label>
+  </div>
+</form>
+</div>
+</div> <!--#IsFeatured-->
+
+<!--IsTicky-->
+<div *ngIf="postType=='post'" class="card mb-2">
+<div class="card-body">
+  <form name="postForm">
+  <div class="form-check form-switch">
+    <input form="postForm" [checked]="post$.isSticky" name="isSticky"  class="form-check-input" type="checkbox" id="isSticky">
+    <label class="form-check-label" for="isSticky">Sticky Post?</label>
+  </div>
+</form>
+</div>
+</div> <!--#isTicky-->
+
+<!--allow comments-->
+<div *ngIf="postType=='post'" class="card mb-2">
+<div class="card-body">
+  <form name="postForm">
+  <div class="form-check form-switch">
+    <input form="postForm" [checked]="post$.allowComments"  name="allowComments"  class="form-check-input" type="checkbox" id="allowComments">
+    <label class="form-check-label" for="allowComments">Allow Comments</label>
+  </div>
+</form>
+</div>
+</div> <!--#allow comments-->
+      </div>
+    </div><!--#Advance settings-->
+  </div>
+  <!--#Tab panel-->
+      
+  </div>
+    <!--#right sidebar-->
+  </div>
+  <!-- #######################################################################3Modal-->
+  <!--Modal-->
+ <div class="modal fade" id="dynamicModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">{{modalTitle}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @if(modalTitle=="Status"){
+          <!--ContentStatus-->
+          <form name="postForm">
+          <div class="form-check" *ngFor="let cs of config.CONTENT_STATUS">
+            <input name="contentStatus" value="{{cs}}" class="form-check-input contentStatus" type="radio" name="contentStatus" id="contentStatus{{cs}}"[checked]="cs==post$.contentStatus">
+            <label class="form-check-label" for="contentStatus{{cs}}">{{cs}}</label>
+        </div>
+        </form>
+        <!--#ContentStatus-->}
+
+    @else if (modalTitle=="Category") {
+      <!--add category-->
+      <div>
+       <app-category [id]="-1"></app-category>
+      </div>
+      <!--#add category-->
+    }@else if (modalTitle=="Excerpt") {
+      <!--Excerpt-->
+      <div class="mb-3">
+        <form name="postForm">
+          <textarea #excerpt  name="excerpt" value="{{post$.excerpt}}" class="form-control" id="excerpt" rows="3"></textarea>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal" (click)="saveExcerpt(excerpt.value)">Save</button>
+      </div><!--#Excerpt-->
+    } @else {
+          <div>
+
+          </div>
+
+        }
+      </div>
+    </div>
+  </div>
+      </div>
+<!--#Modal-->
+
+}
+
+<!--Status message-->
+     <div *ngIf="statusMessage" class="fixed-bottom">
+      <app-error-message [(errorMessage)]="statusMessage" [(alertType)]="alertType"></app-error-message>
+     </div>
+     <!--Status message-->
+
+
+  
+
+
+  

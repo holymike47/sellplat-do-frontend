@@ -1,0 +1,72 @@
+
+<main id = "home">
+    <div class="container">
+        <h2>Welcome to SellPlat</h2>
+        <div class = "row">
+            <div class ="col-md-6">
+                <p><a class="btn btn-primary" routerLink="/app/login">Login</a></p>
+               
+                
+            </div>
+            <div class ="col-md-6">
+                <div class="form-signin w-100 m-auto" id="register">
+  <p>{{formMessage}}</p>
+
+<div class="form-floating" *ngIf="authToken">
+        <input  class="form-control" #token>
+        <button class="btn  w-100 py-2" (click)="verifyAuthToken(token)">Submit</button>
+      </div>
+
+  <div class="form-floating" *ngIf="registrationSuccesful">
+        <a routerLink="/sp/app/admin/dashboard/{{cache.user.username}}" class="btn w-100 py-2">Dashboard</a>
+      </div>
+
+<form [formGroup]="registerForm" (ngSubmit)="submit()" *ngIf="registerForm">
+  
+      <div class="form-floating">
+        <input type="email" class="form-control" id="email" formControlName="email">
+        <label for="email">Email address</label>
+      </div>
+
+      <div *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+      class="alert alert-danger">
+    <div *ngIf="email?.hasError('required')">
+      Email is required.
+    </div>
+   
+    <div *ngIf="email?.hasError('email')">
+      please enter a valid email
+    </div>
+  </div>
+
+      <div class="form-floating">
+        <input type="password" class="form-control" id="password" formControlName="password">
+        <label for="password">Password</label>
+      </div>
+
+      <div *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+      class="alert alert-danger">
+    <div *ngIf="password?.hasError('required') || password?.hasError('minlength')">
+      Please enter your password
+    </div>
+  </div>
+  
+      <button class="btn w-100 py-2" type="submit" [disabled]="!registerForm.valid">Submit</button>
+    </form>
+    
+</div>
+            </div>
+        </div>
+        
+    </div>
+
+</main>
+
+
+
+
+
+
+
+
+

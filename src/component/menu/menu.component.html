@@ -1,0 +1,189 @@
+@if(menuItems$){
+  
+    <div class="container">
+<div class="row">
+    <div class="col-md-6">
+      <p>Menu</p>
+      <!--Pages-->
+<div class="card mb-2">
+  <div class="card-body">
+    <p>
+      <button class="btn btn-md btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#pages-menu" aria-expanded="false" aria-controls="pages-menu">
+        Pages
+      </button>
+    </p>
+  <div class="collapse" id="pages-menu">
+        <div class="card-body">
+          <div class="form-check" *ngFor="let m of menuItems$.pages">
+              <input id="menu-{{m.title}}-{{m.id}}" (click)="checkMenu(m,'page')" class="form-check-input" type="checkbox" #page [value]="m">
+              <label class="form-check-label" for="menu-{{m.title}}-{{m.id}}">
+            {{m.title}}
+              </label>
+            </div>
+            <button *ngIf="menuItems$.pages.length>0" type="button" class="btn btn-primary mb-3" (click)="addSelectedMenu('page')">Add to menu</button>
+        </div>
+  </div>
+  </div>
+</div>  <!--#Pages-->
+
+<!--Posts-->
+<div class="card mb-2">
+  <div class="card-body">
+    <p>
+      <button class="btn btn-md btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#posts-menu" aria-expanded="false" aria-controls="posts-menu">
+        Posts
+      </button>
+    </p>
+  <div class="collapse" id="posts-menu">
+        <div class="card-body">
+          <div class="form-check" *ngFor="let m of menuItems$.posts">
+              <input id="menu-{{m.title}}-{{m.id}}" (change)="checkMenu(m,'post')" class="form-check-input" type="checkbox" #post [value]="m">
+              <label class="form-check-label" for="menu-{{m.title}}-{{m.id}}">
+            {{m.title}}
+              </label>
+            
+            </div>
+            <button *ngIf="menuItems$.posts.length>0" type="button" class="btn btn-primary mb-3" (click)="addSelectedMenu('post')">Add to menu</button>
+        </div>
+  </div>
+  </div>
+</div>  <!--#Posts-->
+
+<!--Category-->
+<div class="card mb-2">
+  <div class="card-body">
+    <p>
+      <button class="btn btn-md btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#categories-menu" aria-expanded="false" aria-controls="categories-menu">
+        Categories
+      </button>
+    </p>
+  <div class="collapse" id="categories-menu">
+        <div class="card-body">
+          <div class="form-check" *ngFor="let m of menuItems$.categories">
+              <input id="menu-{{m.name}}-{{m.id}}" (change)="checkMenu(m,'category')" class="form-check-input" type="checkbox" [value]="m" #category>
+              <label class="form-check-label" for="menu-{{m.name}}-{{m.id}}">
+            {{m.name}}
+              </label>
+            </div>
+            <button *ngIf="menuItems$.categories.length>0" type="button" class="btn btn-primary mb-3" (click)="addSelectedMenu('category')">Add to menu</button>
+        </div>
+  </div>
+  </div>
+</div>  <!--#Category-->
+
+<!--Custom-->
+<div class="card mb-2">
+  <div class="card-body">
+    <p>
+      <button class="btn btn-md btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#customs-menu" aria-expanded="false" aria-controls="customs-menu">
+        Custom Menu
+      </button>
+    </p>
+  <div class="collapse" id="customs-menu">
+        <div class="card-body">
+          <form class="row g-3">
+            <div class="col-auto">
+              <input type="text" placeholder="Label"  class="form-control" #cmlabel>
+            </div>
+            <div class="col-auto">
+              <input type="text" placeholder="Url"  class="form-control" #cmlink>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-primary mb-3" (click)="checkMenu(null,'custom',{label:cmlabel,url:cmlink})">Add</button>
+            </div>
+          </form>
+        </div>
+  </div>
+  </div>
+</div>  <!--#Custom-->
+      
+    </div>
+
+    <!--Selected Menu-->
+    <div class="col-md-6">
+        <p>Selected Menu</p>
+        @if(menuItems$.display.length >0){
+          <div class="card mb-2" *ngFor="let m of menuItems$.display">
+            <main *ngIf="m.parentId==null || m.parentId==0">
+    <button class="btn btn-md btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#menu-' + m.id"  aria-expanded="false" aria-controls="menu">
+      {{m.item}}
+    </button>
+ 
+
+    <div class="card-body collapse" id="menu-{{m.id}}">
+            <form class="row g-3">
+<div class="form-group">
+  <label for="{{m.item}}">Menu Label</label>
+  <input (change)="setLabel(m,label)" #label class="form-control" id="{{m.item}}" aria-describedby="menu" placeholder="{{m.label}}">
+</div>
+<div class="row">
+@if(m.children.length<1){
+<div class="col-8">
+<label for="">Menu Parent</label>
+     <select  (change)="setParent(m,parent)" #parent class="form-select" aria-label="" >
+      <option value="0">None</option>
+      <option [selected]="m.parentId==parent.id" value="{{parent.id}}" *ngFor="let parent of menuList(m.id)">{{parent.label}}</option>
+    </select>
+    </div>
+}@else {
+<div>You are a root menu: Remove children</div>
+}
+
+        <div class="col-3">
+  <label for="">Menu Order</label>
+         <select (change)="setOrder(m,menuOrder,true)" #menuOrder class="form-select" aria-label="" >
+          <option [selected]="m.menuOrder==o.menuOrder" value="{{o.menuOrder}}" *ngFor="let o of rootMenu">{{o.menuOrder}} of {{size()}}</option>
+        </select>
+        </div>
+      </div>
+
+<p class="text-danger"><a  style="cursor: pointer;" (click)="deleteMenuItem(m)">Delete</a></p>
+</form>  
+       
+    </div>
+    @if(m.children.length>0){
+      <div class="card mb-2 ms-4" *ngFor="let c of m.children">
+        <button class="btn btn-md btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#menu-' + c.id" aria-expanded="false" aria-controls="menu">
+          {{c.item}}
+        </button>
+        <div class="card-body collapse" id="menu-{{c.id}}">
+                <form class="row g-3">
+    <div class="form-group">
+      <label for="{{c.item}}">Menu Label</label>
+      <input (change)="setLabel(c,label)" #label class="form-control" id="{{c.item}}" aria-describedby="menu" placeholder="{{c.label}}">
+    </div>
+    <div class="row">
+            <div class="col-3">
+      <label for="">Menu Order</label>
+             <select (change)="setOrder(c,menuOrder,false)" #menuOrder class="form-select" aria-label="" >
+              <option [selected]="c.menuOrder==o.menuOrder" value="{{o.menuOrder}}" *ngFor="let o of m.children">{{o.menuOrder - 100}} of {{size(m)}}</option>
+            </select>
+            </div>
+          </div>
+    <p class="text-danger"><a  style="cursor: pointer;" (click)="removeFromParent(c,m)">Remove</a></p>
+    </form>     
+        </div>
+              </div>
+    }
+  
+
+  </main>
+            
+          </div>
+          <p><button (click)="saveMenu()">Save</button></p>
+        }
+         
+
+    </div><!--#Selected Menu-->
+
+
+
+        
+    </div>
+      </div>
+}
+<!--Status message-->
+     <div *ngIf="statusMessage" class="fixed-bottom">
+      <app-error-message [(errorMessage)]="statusMessage" [(alertType)]="alertType"></app-error-message>
+     </div>
+     <!--Status message-->

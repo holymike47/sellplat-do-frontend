@@ -1,0 +1,33 @@
+<app-header></app-header>
+@if(posts$){
+    <div class="container">
+        <div class="px-0">
+    <h2 class="display-4 fst-italic">{{archiveTitle}}</h2>
+    <article [innerHTML]="archiveMessage"></article>
+  </div>
+        <div class="row">
+            <div class="col-md-6 mb-4" *ngFor="let p of posts$">
+                <div class="card">
+               <!--<div class="card" style="width: 18rem;"> -->     
+               @if(p.featuredImageUrl){
+<img [src]="p.featuredImageUrl" width="800" height="400" class="card-img-top" [alt]="p.title">
+               }@else {
+ <svg class="bd-placeholder-img" width="800" height="400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+              }    
+  
+  <div class="card-body">
+    <h5 class="card-title">{{p.title}}</h5>
+    <p class="card-text">
+    @if(p.excerpt){
+        {{p.excerpt}}
+    }
+    </p>
+    <a routerLink="/{{username}}/{{p.title}}/{{p.id}}" class="btn">Learn More</a>
+  </div>
+</div>
+            </div>
+        </div>
+
+    </div>
+}
+<app-footer></app-footer>
